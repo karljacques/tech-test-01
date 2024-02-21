@@ -1,0 +1,6 @@
+{
+    "name": "karljacques/tech-test-01",
+    "require": {
+        "php": "^8.3"
+    }
+}

@@ -1,0 +1,33 @@
+# Taken in part from my own work at https://github.com/karljacques/SpaceFace/blob/master/docker-compose.yml for speed of development
+# along with the Dockerfile & nginx.conf, however all have been modified.
+version: '3.7'
+services:
+    database:
+        image: mysql:latest
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+        networks:
+            - internal
+
+    nginx:
+        image: nginx:latest
+        ports:
+            - "80:80"
+        volumes:
+            - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+
+        networks:
+            - external
+            - internal
+    php:
+        build: ./docker
+        volumes:
+#            I'd usually exclude the vendor folder for performance
+            - ./:/var/www/html
+        networks:
+            - external
+            - internal
+
+networks:
+    internal:
+    external:
