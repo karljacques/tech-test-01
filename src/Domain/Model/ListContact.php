@@ -31,7 +31,7 @@ final class ListContact
         $obj->id = $data['id'];
         $obj->email = $data['email_address'];
         $obj->name = $data['name'];
-        $obj->createdAt = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $data['created_at']) ?: throw new \RuntimeException('Unabled to created valid DateTimeImmutable from format');
+        $obj->createdAt = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $data['created_at']) ?: throw new \RuntimeException('Unable to create valid DateTimeImmutable from format');
 
         return $obj;
     }
