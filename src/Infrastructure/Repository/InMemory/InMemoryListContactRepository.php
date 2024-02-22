@@ -11,10 +11,23 @@ class InMemoryListContactRepository implements ListContactRepository
     private array $records = [];
 
 
-    public function findAll(?string $orderBy = null): array
+    public function findAll(?string $orderBy = null, string $sortDirection = 'ASC'): array
     {
-        // TODO: Implement orderBy
-        return $this->records;
+        // arrays are assigned by copy - don't sort the original array, sort the intermediate
+        $records = $this->records;
+
+        if ($orderBy !== null) {
+            usort($records, function (ListContact $a, ListContact $b) use ($orderBy, $sortDirection): int {
+                $columnFetcher = $this->getColumnFetcher($orderBy);
+
+                $valueA = $columnFetcher($a);
+                $valueB = $columnFetcher($b);
+
+                return $sortDirection === 'ASC' ? $valueA <=> $valueB : $valueB <=> $valueA;
+            });
+        }
+
+        return $records;
     }
 
     public function removeById(int $id): void
@@ -33,5 +46,17 @@ class InMemoryListContactRepository implements ListContactRepository
         $reflProp->setValue($listContact, $id);
 
         $this->records[$listContact->getId()] = $listContact;
+    }
+
+    /** @return \Closure(ListContact): string */
+    private function getColumnFetcher(string $column): \Closure
+    {
+        // I could use an Enum to make this cleaner. i.e: ListContactColumn::CreatedAt
+        return match ($column) {
+            'created_at' => fn(ListContact $obj): string => $obj->getCreatedAt()->format(\DateTimeInterface::ATOM),
+            'name' => fn(ListContact $obj): string => $obj->getName(),
+            'email_address' => fn(ListContact $obj): string => $obj->getEmail(),
+            default => throw new \LogicException('Unsupported orderBy column')
+        };
     }
 }

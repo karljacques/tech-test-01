@@ -12,6 +12,8 @@
         <directory name="src"/>
         <ignoreFiles>
             <directory name="vendor" />
+            <!-- The templates won't work well with static analysis-->
+            <directory name="src/Application/Templates"/>
         </ignoreFiles>
 
     </projectFiles>
