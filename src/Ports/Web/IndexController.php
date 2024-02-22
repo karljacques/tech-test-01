@@ -15,7 +15,7 @@ final readonly class IndexController
     }
     public function __invoke(): string
     {
-        $listContactArr = $this->listContactRepository->findAll();
+        $listContactArr = $this->listContactRepository->findAll('created_at', 'DESC');
 
         return $this->renderer->render('list.php', [
             'items' => $listContactArr

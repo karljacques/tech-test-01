@@ -10,7 +10,10 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use App\Application\Bridge\SimpleRouter\PHPDIClassLoader;
 use App\Domain\Repository\ListContactRepository;
+use App\Infrastructure\Repository\DBAL\DBALListContactRepository;
 use App\Infrastructure\Repository\InMemory\InMemoryListContactRepository;
+use App\Ports\API\AddListContactController;
+use App\Ports\API\DeleteListContactController;
 use App\Ports\Web\IndexController;
 use DevCoder\Renderer\PhpRenderer;
 use Doctrine\DBAL\Connection;
@@ -30,7 +33,7 @@ $builder->addDefinitions([
             'driver' => 'pdo_mysql'
         ]);
     }),
-    ListContactRepository::class => DI\get(InMemoryListContactRepository::class),
+    ListContactRepository::class => DI\get(DBALListContactRepository::class),
     // I'd usually use twig - but this library is very basic and keeps it close to vanilla php
     PhpRenderer::class => DI\Factory(function () {
         return new PhpRenderer(__DIR__ . '/../src/Application/Templates/');
@@ -39,11 +42,10 @@ $builder->addDefinitions([
 
 $container = $builder->build();
 
-
 SimpleRouter::setCustomClassLoader(new PHPDIClassLoader($container));
 
 SimpleRouter::get('/', [IndexController::class, '__invoke']);
-SimpleRouter::get('/test', fn() => 'test');
-
+SimpleRouter::post('/listContact', [AddListContactController::class, 'add']);
+SimpleRouter::delete('/listContact/{id}', [DeleteListContactController::class, 'delete']);
 
 SimpleRouter::start();

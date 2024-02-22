@@ -14,7 +14,8 @@ final readonly class DBALListContactRepository implements ListContactRepository
 
     public function save(ListContact $listContact): void
     {
-        $this->connection->executeQuery("
+
+        $this->connection->executeStatement("
 INSERT INTO list_contact
  (email_address, `name`, created_at)
 VALUES (:email_address, :name, :created_at)", [
@@ -23,7 +24,6 @@ VALUES (:email_address, :name, :created_at)", [
             'created_at' => $listContact->getCreatedAt()->format('Y-m-d H:i:s'),
         ]);
 
-
         // I'd like do some abstraction here for a real project.
         $id = $this->connection->lastInsertId();
 
@@ -31,6 +31,7 @@ VALUES (:email_address, :name, :created_at)", [
         $reflProp = $refl->getProperty('id');
 
         $reflProp->setValue($listContact, $id);
+
     }
 
     public function findAll(?string $orderBy = null, string $sortDirection = 'ASC'): array
@@ -56,7 +57,7 @@ VALUES (:email_address, :name, :created_at)", [
     public function removeById(int $id): void
     {
         // I might've add error checking and handling here with more time
-        $this->connection->executeQuery("DELETE FROM list_contact WHERE id = :id LIMIT 1", [
+        $this->connection->executeStatement("DELETE FROM list_contact WHERE id = :id LIMIT 1", [
             'id' => $id
         ]);
     }

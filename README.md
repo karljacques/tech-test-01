@@ -18,6 +18,7 @@ Then, run the ad-hoc migrations system with:
 ```
 docker compose exec php php src/migrate.php
 ```
+If that step failed, just wait and try again. It's not a very refined docker-compose
 
 You should now be able to access the page using the address `localhost`, unless you have something blocking port 80, in which case you'll need to pick a different port for nginx in `docker-compose.yml`
 
