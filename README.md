@@ -4,7 +4,9 @@ I had fun with it.
 
 The test was to be completed without any framework, which I found quite broad, so I've opted to pull in some 
 very basic components for Routing, DI and rendering to help. 
-I wanted to show how I'd approach a real project, and this largely architecture is framework-agnostic in my opinion. 
+I wanted to show how I'd approach a real project, and this largely architecture is framework-agnostic in my opinion.
+
+The entry point to the application is `public/index.php`
 
 # How to run
 
